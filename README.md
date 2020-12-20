@@ -9,12 +9,12 @@ The RPN notation is also known as postfix expression. The capabilities of the Ca
 
 
 After cloning locally, perform below commands in terminal
->
-> git clone https://github.com/omegaultron/rpn-calculator.git
-> cd rpn-calculator
-> gradle build 
-> java -jar build/libs/RPNCalculator-1.0-SNAPSHOT.jar
+$
+$ git clone https://github.com/omegaultron/rpn-calculator.git
+$ cd rpn-calculator
+$ gradle build 
+$ java -jar build/libs/RPNCalculator-1.0-SNAPSHOT.jar
 
 #Sample Input and Output
-> Enter space separated RPN expression : 1 2 3 + -
-> RPN expression output : -4.0
+$ Enter space separated RPN expression : 1 2 3 + -
+$ RPN expression output : -4.0
