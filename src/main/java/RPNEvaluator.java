@@ -4,55 +4,60 @@ import java.util.Stack;
 public class RPNEvaluator {
     String rpnExpr;
 
-    public String getRpnExpr() {
-        return rpnExpr;
-    }
-
-    public void setRpnExpr(String rpnExpr) {
+    public RPNEvaluator(String rpnExpr) {
         this.rpnExpr = rpnExpr;
     }
 
-    public Double evaluateExpression() throws Exception {
+    public Double evaluateExpression() {
         Stack<Double> stack = new Stack<>();
+        double firstOperand, secondOperand;
         for (String token : this.rpnExpr.split(" ")){
             try {
-                if (token.equals("*")) {
-                    double secondOperand = stack.pop();
-                    double firstOperand = stack.pop();
-                    stack.push(firstOperand * secondOperand);
-                } else if (token.equals("/")) {
-                    double secondOperand = stack.pop();
-                    double firstOperand = stack.pop();
-                    stack.push(firstOperand / secondOperand);
-                } else if (token.equals("-")) {
-                    double secondOperand = stack.pop();
-                    double firstOperand = stack.pop();
-                    stack.push(firstOperand - secondOperand);
-                } else if (token.equals("+")) {
-                    double secondOperand = stack.pop();
-                    double firstOperand = stack.pop();
-                    stack.push(firstOperand + secondOperand);
-                } else if (token.equals("^")) {
-                    double secondOperand = stack.pop();
-                    double firstOperand = stack.pop();
-                    stack.push(Math.pow(firstOperand, secondOperand));
-                } else if(token.equals("%")) {
-                    stack.push(stack.pop() / 100);
-                } else if(token.equals("!")) {
-                    stack.push(calculateFactorial(stack.pop()));
-                }else {
-                    try {
-                        stack.push(Double.parseDouble(token+""));
-                    } catch (NumberFormatException e) {
-                        throw new Exception("Invalid expression character.");
-                    }
+                switch (token) {
+                    case "*":
+                        secondOperand = stack.pop();
+                        firstOperand = stack.pop();
+                        stack.push(firstOperand * secondOperand);
+                        break;
+                    case "/":
+                        secondOperand = stack.pop();
+                        firstOperand = stack.pop();
+                        stack.push(firstOperand / secondOperand);
+                        break;
+                    case "-":
+                        secondOperand = stack.pop();
+                        firstOperand = stack.pop();
+                        stack.push(firstOperand - secondOperand);
+                        break;
+                    case "+":
+                        secondOperand = stack.pop();
+                        firstOperand = stack.pop();
+                        stack.push(firstOperand + secondOperand);
+                        break;
+                    case "^":
+                        secondOperand = stack.pop();
+                        firstOperand = stack.pop();
+                        stack.push(Math.pow(firstOperand, secondOperand));
+                        break;
+                    case "%":
+                        stack.push(stack.pop() / 100);
+                        break;
+                    case "!":
+                        stack.push(calculateFactorial(stack.pop()));
+                        break;
+                    default:
+                        try {
+                            stack.push(Double.parseDouble(token));
+                        } catch (NumberFormatException e) {
+                            throw new IllegalArgumentException("Invalid Expression Character");
+                        }
                 }
             } catch (EmptyStackException ese) {
-                throw new Exception("Invalid RPN expression.");
+                throw new RuntimeException("Invalid Expression");
             }
         }
         if (stack.size() > 1) {
-            throw new Exception("Invalid RPN expression.");
+            throw new RuntimeException("Invalid Expression");
         }
         return stack.pop();
     }

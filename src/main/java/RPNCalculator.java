@@ -8,8 +8,7 @@ public class RPNCalculator {
         String enteredExpression = scanner.nextLine();
         scanner.close();
 
-        RPNEvaluator rpnEvaluator = new RPNEvaluator();
-        rpnEvaluator.setRpnExpr(enteredExpression);
+        RPNEvaluator rpnEvaluator = new RPNEvaluator(enteredExpression);
         double exprResult = rpnEvaluator.evaluateExpression();
         System.out.println("RPN expression output : " + exprResult);
 
