@@ -1,8 +1,34 @@
 import java.util.EmptyStackException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
+
+@FunctionalInterface
+interface BinaryOperation {
+    double binaryAction(double firstOperand, double secondOperand);
+}
+
+@FunctionalInterface
+interface UnaryOperation {
+    double unaryAction(double operand);
+}
 
 public class RPNEvaluator {
     String rpnExpr;
+
+    public static Map<String, BinaryOperation> binaryOperationMap = new HashMap<>();
+    public static Map<String, UnaryOperation> unaryOperationMap = new HashMap<>();
+
+    static {
+        binaryOperationMap.put("+", (a, b) -> b + a);
+        binaryOperationMap.put("-", (a, b) -> b - a);
+        binaryOperationMap.put("*", (a, b) -> b * a);
+        binaryOperationMap.put("/", (a, b) -> b / a);
+        binaryOperationMap.put("^", (a, b) -> Math.pow(b, a));
+
+        unaryOperationMap.put("!", a -> calculateFactorial(a));
+        unaryOperationMap.put("%", a -> a / 100);
+    }
 
     public RPNEvaluator(String rpnExpr) {
         this.rpnExpr = rpnExpr;
@@ -10,42 +36,13 @@ public class RPNEvaluator {
 
     public Double evaluateExpression() {
         Stack<Double> stack = new Stack<>();
-        double firstOperand, secondOperand;
         for (String token : this.rpnExpr.split(" ")){
             try {
-                switch (token) {
-                    case "*":
-                        secondOperand = stack.pop();
-                        firstOperand = stack.pop();
-                        stack.push(firstOperand * secondOperand);
-                        break;
-                    case "/":
-                        secondOperand = stack.pop();
-                        firstOperand = stack.pop();
-                        stack.push(firstOperand / secondOperand);
-                        break;
-                    case "-":
-                        secondOperand = stack.pop();
-                        firstOperand = stack.pop();
-                        stack.push(firstOperand - secondOperand);
-                        break;
-                    case "+":
-                        secondOperand = stack.pop();
-                        firstOperand = stack.pop();
-                        stack.push(firstOperand + secondOperand);
-                        break;
-                    case "^":
-                        secondOperand = stack.pop();
-                        firstOperand = stack.pop();
-                        stack.push(Math.pow(firstOperand, secondOperand));
-                        break;
-                    case "%":
-                        stack.push(stack.pop() / 100);
-                        break;
-                    case "!":
-                        stack.push(calculateFactorial(stack.pop()));
-                        break;
-                    default:
+                if (binaryOperationMap.containsKey(token)) {
+                    stack.push(binaryOperationMap.get(token).binaryAction(stack.pop(), stack.pop()));
+                } else if (unaryOperationMap.containsKey(token)) {
+                    stack.push(unaryOperationMap.get(token).unaryAction(stack.pop()));
+                } else {
                         try {
                             stack.push(Double.parseDouble(token));
                         } catch (NumberFormatException e) {
@@ -62,7 +59,7 @@ public class RPNEvaluator {
         return stack.pop();
     }
 
-    public double calculateFactorial(double n) {
+    public static double calculateFactorial(double n) {
         double fact = 1;
         for (int i = 2; i <= n; i++) {
             fact = fact * i;
