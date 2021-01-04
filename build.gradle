@@ -2,6 +2,13 @@ plugins {
     id 'java'
 }
 
+test {
+    testLogging {
+        showStandardStreams = true
+        events = ["passed", "failed", "skipped"]
+    }
+}
+
 jar {
     manifest {
         attributes(
